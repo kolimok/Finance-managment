@@ -1,0 +1,110 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Track {
+    private ArrayList<Integer> list;
+    private Scanner sc = new Scanner(System.in);
+    private File file = new File("Save.txt");
+
+    public Track (){
+        list = new ArrayList<>();
+        Savepoint();
+        Recovery();
+
+    }
+
+    public void Saver () {
+            //Noter
+            try {
+            FileWriter Writer = new FileWriter(file);
+            for (int expense : list) {
+                Writer.write(expense + "\n");
+            }
+            Writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void Recovery () {
+        try {
+        Scanner restore = new Scanner(file);
+
+        while (restore.hasNextLine()) {
+            String Line = restore.nextLine();
+            int value = Integer.parseInt(Line);
+            list.add(value);
+
+        } 
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    }
+
+    public void Savepoint() {
+        try {
+            //Created? 
+            if (file.createNewFile()) {
+                System.out.println("Exists...");
+            } else {
+                System.out.println("Added...");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+         }
+
+    public void viewList () {
+        System.out.println(list);
+        return;
+    }
+
+    public void add () {
+        System.out.println("add price: ");
+        int add = sc.nextInt();
+        list.add(add);
+        Saver();
+
+        return;
+    }
+
+    public void remove () {
+        System.out.println("expenses: " + list);
+        System.out.println("Choose 1 to deleat");
+        int remove = sc.nextInt();
+
+        try {
+            list.remove(remove);
+            Savepoint();
+        } catch (Exception e) {
+            return;
+        }
+    }
+    public static void main(String[] args) throws Exception {
+        Track track = new Track();
+
+        while (true) {
+            for (int x = 0; x < 3; x ++) {
+                System.out.println(" ");
+            }
+
+        System.out.println("1. Add expense");
+        System.out.println("2. view expenses");
+        System.out.println("3. remove expenses");
+
+        Scanner sc = new Scanner(System.in);
+        int choice = sc.nextInt();
+
+        //CHOICE
+        switch (choice) {
+            case 1 -> track.add();
+            case 2 -> track.viewList();
+            case 3 -> track.remove();
+
+        }
+    }
+    }
+}
